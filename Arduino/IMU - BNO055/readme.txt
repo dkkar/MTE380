@@ -1,1 +1,0 @@
-Copy all folders in Lib to your ProgramFiles -> Arduino -> libraries folder
