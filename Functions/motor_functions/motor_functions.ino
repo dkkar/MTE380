@@ -15,10 +15,7 @@
 #define in4 8
 #define en2 9
 
-//#define Kp 4
-//#define Ki 2
-//#define Kd 0.01
-
+// PID Consts
 #define Kp 3
 #define Ki 0.5
 #define Kd 0.001
@@ -55,9 +52,6 @@ void setup(void) {
   delay(1000);
     
   bno.setExtCrystalUse(true);
-//
-//  imu::Vector<3> euler = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
-//  target_angle_x = euler.x();
 }
 
 void stopMotors()
@@ -213,24 +207,12 @@ void turnAngle(bool dir, float angle)
     {
       imu::Vector<3> euler = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
       angle_x = euler.x();
-
-//      Serial.print("Target: ");
-//      Serial.print(angle);
-//      Serial.print("   ");
-//      Serial.print("Angle (case 1): ");
-//      Serial.println(angle_x);
     }
   
     while (angle_x < angle)
     {
       imu::Vector<3> euler = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
       angle_x = euler.x();
-
-//      Serial.print("Target: ");
-//      Serial.print(angle);
-//      Serial.print("   ");
-//      Serial.print("Angle (case 2): ");
-//      Serial.println(angle_x);
     }
   }
 
@@ -259,28 +241,48 @@ void turnAngle(bool dir, float angle)
     {
       imu::Vector<3> euler = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
       angle_x = euler.x();
-      
-//      Serial.print("Target: ");
-//      Serial.print(angle);
-//      Serial.print("   ");
-//      Serial.print("Angle (case 1): ");
-//      Serial.println(angle_x);
     }
   
     while (angle_x > angle)
     {
       imu::Vector<3> euler = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
       angle_x = euler.x();
-      
-//      Serial.print("Target: ");
-//      Serial.print(angle);
-//      Serial.print("   ");
-//      Serial.print("Angle (case 2): ");
-//      Serial.println(angle_x);
     }
   }
   
   stopMotors();
+}
+
+/*
+ *  Continuous Move
+ */
+void continuousAngle(bool dir)
+{
+  int pwm_r = 140;
+  int pwm_l = 140;
+  
+  // Setting Direction
+  if (dir == 0)
+  {
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, HIGH);
+    digitalWrite(in3, HIGH);
+    digitalWrite(in4, LOW);
+      
+    analogWrite(en1, pwm_r);
+    analogWrite(en2, pwm_l);
+  }
+
+  else if (dir == 1)
+  {
+    digitalWrite(in1, HIGH);
+    digitalWrite(in2, LOW);
+    digitalWrite(in3, LOW);
+    digitalWrite(in4, HIGH);
+
+    analogWrite(en1, pwm_r);
+    analogWrite(en2, pwm_l);
+  }
 }
 
 void loop(void) 
